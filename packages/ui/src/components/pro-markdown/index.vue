@@ -23,6 +23,17 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { result, render, handleClick } = useMarkdown();
 
+const handleDetailsDblClick = (event: MouseEvent) => {
+    // 检查双击的目标元素是否是 details 或者在 details 内部
+    const target = event.target as HTMLElement;
+    const detailsElement = target?.closest("details");
+
+    if (detailsElement) {
+        // 如果是 details 元素，执行相应操作 (切换 details 的展开/折叠状态)
+        detailsElement.open = !detailsElement.open;
+    }
+};
+
 /** 初始渲染 */
 render(props.content);
 
@@ -48,7 +59,7 @@ defineExpose({
         这样即可避免 SSR 阶段页面为空的问题。
     -->
     <ClientOnly>
-        <div class="pro-markdown">
+        <div class="pro-markdown" @dblclick="handleDetailsDblClick">
             <slot name="before" />
             <div @click="handleClick($event)" v-dompurify-html:markdown="result" />
             <slot name="after" />
