@@ -59,7 +59,7 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Storage
-storage/uploads/**/*
+!storage/uploads/**/*
 !storage/uploads/**/.gitkeep
 storage/cache/**/*
 !storage/cache/**/.gitkeep
