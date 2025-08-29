@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { NavigationConfig } from "@/app/console/decorate/layout/types";
+import type { MenuItem, NavigationConfig } from "@/app/console/decorate/layout/types";
 import { ROUTES } from "@/common/constants/routes.constant";
 import Logo from "@/public/logo.svg";
 
@@ -18,12 +18,15 @@ const appStore = useAppStore();
  * 转换导航配置为菜单项
  */
 const sidebarMenus = computed(() => {
-    return props.navigationConfig.items.map((item) => ({
-        path: item.link?.path || "/",
-        title: item.title,
-        icon: item.icon || "i-lucide-circle",
-        children: item.children,
-    }));
+    return props.navigationConfig.items
+        .map((item: MenuItem) => ({
+            path: item.link?.path || "/",
+            title: item.title,
+            icon: item.icon || "i-lucide-circle",
+            children: item.children,
+            hidden: !!item.hidden,
+        }))
+        .filter((item) => !item.hidden);
 });
 
 /**

@@ -1,0 +1,13 @@
+[
+    {
+        "id": "menu_knowledge",
+        "icon": "i-lucide-file-search",
+        "link": {
+            "name": "menu.knowledge",
+            "path": "/public/knowledge",
+            "type": "system",
+            "query": {}
+        },
+        "title": "知识库"
+    }
+]
