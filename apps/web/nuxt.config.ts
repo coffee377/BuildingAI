@@ -30,7 +30,13 @@ export default defineNuxtConfig({
 
     pages: {
         // 筛选 匹配任意子目录 以及去除 console/下面的所有文件。
-        pattern: ["*.vue", "**/*/*.vue", "!**/_***/*.*", "!console/**/*.*"],
+        pattern: [
+            "*.vue",
+            "**/*/*.vue",
+            "!**/_***/*.*",
+            "!console/**/*.*",
+            "!public/**/_components/**/*.*",
+        ],
     },
 
     components: {
