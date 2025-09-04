@@ -1,5 +1,6 @@
 import type {
     WrappedBooleanResponse,
+    WrappedCollectionResponse,
     WrappedCollectionsResponse,
     WrappedIngestionResponse,
 } from "r2r-js";
@@ -34,6 +35,21 @@ export function apiGetKnowledgeList(
     const limit = pageSize ?? 10;
     const ownerOnly = !showAll;
     return client.collections.list({ offset, limit, ownerOnly });
+}
+
+export interface CreateKnowledgeParams {
+    name: string;
+    description?: string;
+}
+
+/**
+ * 创建知识库
+ * @param params
+ */
+export function apiCreateKnowledge(
+    params: CreateKnowledgeParams,
+): Promise<WrappedCollectionResponse> {
+    return client.collections.create(params);
 }
 
 /**
