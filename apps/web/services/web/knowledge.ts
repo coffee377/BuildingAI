@@ -1,4 +1,5 @@
 import type {
+    CollectionResponse,
     WrappedBooleanResponse,
     WrappedCollectionResponse,
     WrappedCollectionsResponse,
@@ -40,6 +41,15 @@ export function apiGetKnowledgeList(
 export interface CreateKnowledgeParams {
     name: string;
     description?: string;
+}
+
+/**
+ * 获取知识库详情
+ * @param id 知识库ID
+ * @returns 知识库详情
+ */
+export async function apiGetKnowledgeDetail(id: string): Promise<CollectionResponse> {
+    return (await client.collections.retrieve({ id })).results;
 }
 
 /**

@@ -9,7 +9,11 @@
     "menu": {
         "settings": "设置",
         "documents": "文档",
-        "members": "团队成员"
+        "members": "成员",
+        "entities": "实体",
+        "relationships": "关系",
+        "communities": "社区",
+        "explore": "探索"
     },
     "create": {
         "title": "创建知识库",
@@ -37,6 +41,12 @@
         "clusterStatus": "知识库图集群状态",
         "syncStatus": "知识库图同步状态"
     },
-    "retrievalMode": "知识库内容检索模式",
-    "storageSize": "存储空间"
+    "details": {
+        "documentCount": "文档数量",
+        "userCount": "用户数量",
+        "graphClusterStatus": "集群状态",
+        "graphSyncStatus": "同步状态",
+        "createdAt": "创建时间",
+        "updatedAt": "更新时间"
+    }
 }
