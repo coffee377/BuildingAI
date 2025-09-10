@@ -36,7 +36,9 @@
         "PM2_APP_NAME",
         "SERVER_SHOW_DETAILED_ERRORS",
         "LOG_DATABASE_SCHEMA",
-        "SERVER_IS_DEMO_ENV"
+        "SERVER_IS_DEMO_ENV",
+        "VITE_APP_R2R_API_PREFIX",
+        "VITE_APP_FILE_CONVERSION_API_PREFIX"
     ],
     "tasks": {
         "build": {

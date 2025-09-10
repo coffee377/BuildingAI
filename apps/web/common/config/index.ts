@@ -19,6 +19,11 @@ const AppConfig = {
 
     // 请求超时时间（毫秒）
     TIMEOUT: 60 * 1000,
+
+    // R2R接口基础前缀
+    R2R_API_PREFIX: import.meta.env.VITE_APP_R2R_API_PREFIX,
+    // 文件转换接口前缀
+    FILE_CONVERSION_API_PREFIX: import.meta.env.VITE_APP_FILE_CONVERSION_API_PREFIX,
 };
 
 export default AppConfig;
