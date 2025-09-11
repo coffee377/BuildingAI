@@ -1,4 +1,4 @@
-import type { LinkItem } from "@/common/components/console/link-picker/types";
+import type { LinkItem } from "../../../../common/components/console/link-picker/types";
 
 /**
  * 菜单项配置
