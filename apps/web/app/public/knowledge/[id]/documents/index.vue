@@ -5,11 +5,14 @@ import type { DocumentResponse } from "r2r-js";
 import { resolveComponent } from "vue";
 
 import {
+    apiCreateDocument,
     apiDeleteDocument,
     apiDownloadDocument,
     apiGetDocumentList,
     type QueryDocumentParams,
 } from "@/services/web/knowledge";
+
+import Create from "./create.vue";
 
 const UButton = resolveComponent("UButton");
 const UBadge = resolveComponent("UBadge");
@@ -46,6 +49,7 @@ const columnLabels = computed(() => ({
 const { paging, getLists } = usePaging<DocumentResponse>({
     fetchFun: apiGetDocumentList,
     params: searchForm,
+    firstLoading: true,
 });
 
 // 文件类型图标映射
@@ -63,6 +67,19 @@ const fileTypeIcons = {
 
 // 定义表格列
 const columns: TableColumn<DocumentResponse>[] = [
+    {
+        accessorKey: "id",
+        header: "序号",
+        cell: ({ row }) => {
+            // 计算分页后的连续序号：(当前页-1)*页大小 + 索引 + 1
+            return (paging.page - 1) * paging.pageSize + row.index + 1;
+        },
+        meta: {
+            class: {
+                td: "w-16 px-2 text-center",
+            },
+        },
+    },
     {
         accessorKey: "title",
         header: () => h("p", { class: "whitespace-nowrap" }, `${columnLabels.value.fileName}`),
@@ -89,11 +106,11 @@ const columns: TableColumn<DocumentResponse>[] = [
         },
     },
     {
-        accessorKey: "metadata.filename",
+        accessorKey: "metadata.originalFilename",
         header: () => h("p", { class: "" }, `${columnLabels.value.originalFileName}`),
         cell: ({ row }) => {
-            const url = row.original["metadata"]["url"] as string;
-            const filename = row.original["metadata"]["filename"] as string;
+            const url = row.original["metadata"]["originalUrl"] as string;
+            const filename = row.original["metadata"]["originalFilename"] as string;
             return h("a", { href: url, target: "_blank" }, filename);
         },
     },
@@ -201,6 +218,30 @@ const handleDownload = async (docId: string, fileName: string) => {
     }
 };
 
+const files = ref<File[]>([]);
+
+const handleFileChange = (file: File[]) => {
+    files.value = file;
+};
+
+const handleCreate = async () => {
+    try {
+        await useModal({
+            color: "primary",
+            title: t("knowledge.documents.create.title"),
+            content: <Create onChange={handleFileChange} />,
+            confirmText: t("console-common.confirm"),
+            ui: {},
+        });
+        apiCreateDocument(unref(files), unref(kid));
+        toast.success(t("common.message.createSuccess") + "，后台异步处理中，请稍后查询！");
+    } catch (error) {
+        console.error("文档创建失败:", error);
+    } finally {
+        files.value = [];
+    }
+};
+
 // 删除文档
 const handleDelete = async (docId: string) => {
     try {
@@ -239,6 +280,7 @@ definePageMeta({ layout: "knowledge" });
                 {{ t("console-ai-datasets.documents.description") }}
             </p>
         </div>
+
         <!-- 搜索区域 -->
         <div class="flex w-full justify-between gap-4 py-6 backdrop-blur-sm">
             <UInput
@@ -247,6 +289,18 @@ definePageMeta({ layout: "knowledge" });
                 class="w-80"
                 icon="i-lucide-search"
             />
+
+            <div class="flex items-center gap-2 md:ml-auto">
+                <UButton leading-icon="i-lucide-search" @click="getLists" label="查询"></UButton>
+                <AccessControl :codes="['ai-datasets-documents:create']">
+                    <UButton
+                        :label="t('knowledge.documents.create.title')"
+                        leading-icon="i-lucide-plus"
+                        color="primary"
+                        @click="handleCreate"
+                    />
+                </AccessControl>
+            </div>
         </div>
 
         <div class="flex h-full flex-col">

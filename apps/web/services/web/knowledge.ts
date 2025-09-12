@@ -1,5 +1,6 @@
 import type {
     CollectionResponse,
+    DocumentResponse,
     WrappedBooleanResponse,
     WrappedCollectionResponse,
     WrappedCollectionsResponse,
@@ -76,11 +77,73 @@ export function apiDeleteKnowledge(id: string): Promise<WrappedBooleanResponse> 
     return client.collections.delete({ id });
 }
 
-async function convertFile(files: File[]) {
-    console.log(app.FILE_CONVERSION_API_PREFIX);
-    // todo 调用 上传转换接口 http://192.168.44.180:8000/docs
-    // 下载文件
-    return files;
+interface TransformResult {
+    converted?: string;
+    original?: string;
+}
+
+async function transformFile(file: File): Promise<{ file: File; meta: any }> {
+    const data = new FormData();
+    data.append("file", file);
+    // eslint-disable-next-line http/no-native-http
+    const res = await fetch(`${app.FILE_CONVERSION_API_PREFIX}/convert`, {
+        method: "POST",
+        body: data as FormData,
+    });
+
+    const meta = {};
+
+    const json: TransformResult = (await res.json()) ?? {};
+    const { converted, original } = json;
+    if (original && converted) {
+        const originalUrl = new URL(original);
+        let filename = decodeURI(originalUrl.pathname);
+        filename = filename.substring(filename.lastIndexOf("/") + 1);
+        meta["original_filename"] = filename;
+        meta["original_url"] = original;
+    }
+    if (converted) {
+        const url = new URL(converted);
+        // eslint-disable-next-line http/no-native-http
+        const res = await fetch(url, { method: "GET" });
+        const blob = await res.blob();
+        // 如果未指定 type，使用 blob 自身的 type
+        // const fileType = blob.type;
+        const f = decodeURI(url.pathname);
+        const filename = f.substring(f.lastIndexOf("/") + 1);
+        // File 构造函数：(文件内容数组, 文件名, 选项)
+        const file = new File([blob], filename);
+        return { file, meta };
+    }
+
+    return { file, meta };
+}
+
+interface FileInfo {
+    originalFileName: string;
+    rawFile: File;
+    convertFile?: File;
+    meta?: Record<string, any>;
+    documentId?: string;
+    uploaded?: boolean;
+}
+
+/**
+ * 去掉文件名中的后缀
+ * @param {string} filename - 原始文件名
+ * @returns {string} 去掉后缀后的文件名
+ */
+function removeFileExtension(filename) {
+    // 找到最后一个点的位置
+    const lastDotIndex = filename.lastIndexOf(".");
+
+    // 如果没有点，或者点是第一个字符（如".gitignore"），则返回原文件名
+    if (lastDotIndex <= 0) {
+        return filename;
+    }
+
+    // 截取从开始到最后一个点之前的部分
+    return filename.substring(0, lastDotIndex);
 }
 
 /**
@@ -94,13 +157,54 @@ export async function apiCreateDocument(
     knowledgeId: string,
 ): Promise<void> {
     try {
-        const files = await convertFile(Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles]);
-        for (const file of files) {
-            const {
-                results: { documentId },
-            } = await client.documents.create({ file });
-            // 文档绑定知识库
-            await client.collections.addDocument({ id: knowledgeId, documentId: documentId });
+        // 获取所有已上传文档
+        const docs = await client.documents.list({ limit: 1000 });
+        // 更新上传文件信息
+        const fileInfos: FileInfo[] = [];
+        for (const file of Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles]) {
+            // 如果存在相应 docx 文件，就认为已经上传过了
+            const name = removeFileExtension(file.name);
+            const names = [file.name, `${name}.docx`];
+            const documentId = docs.results.find((doc) => names.includes(doc.title ?? ""))?.id;
+            let convertFile: File, meta: Record<string, any>;
+            if (!documentId) {
+                const transform = await transformFile(file);
+                convertFile = transform.file;
+                meta = transform.meta;
+            }
+            const fileInfo: FileInfo = {
+                originalFileName: file.name,
+                rawFile: file,
+                convertFile,
+                documentId,
+                uploaded: !!documentId,
+                meta,
+            };
+            fileInfos.push(fileInfo);
+        }
+
+        for (const fileInfo of fileInfos) {
+            const { rawFile, convertFile, meta = {}, documentId: docId, uploaded } = fileInfo;
+            let documentId: string;
+            if (!uploaded) {
+                const res = await client.documents.create({
+                    file: convertFile || rawFile,
+                    metadata: { ...meta },
+                    collectionIds: [knowledgeId],
+                });
+                documentId = res.results.documentId;
+            } else {
+                documentId = docId!;
+                // 文档绑定知识库
+                try {
+                    await client.collections.addDocument({
+                        id: knowledgeId,
+                        documentId: documentId,
+                    });
+                } catch (e) {
+                    console.log("文档已存在");
+                }
+            }
         }
     } catch (e) {
         throw new Error(e);
@@ -148,11 +252,11 @@ export async function apiDeleteDocument(
     knowledgeId: string,
 ): Promise<{ success: boolean }> {
     try {
-        if (id) {
-            await client.documents.delete({ id });
-        }
         if (knowledgeId && id) {
             await client.collections.removeDocument({ id: knowledgeId, documentId: id });
+        }
+        if (id) {
+            await client.documents.delete({ id });
         }
         return Promise.resolve({ success: true });
     } catch (e) {

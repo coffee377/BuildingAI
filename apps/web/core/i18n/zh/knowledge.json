@@ -60,6 +60,10 @@
             "createdAt": "上传时间"
         },
         "download": "下载",
-        "delete": "删除"
+        "delete": "删除",
+        "create": {
+            "dragOrSelectFiles": "将文件或文件夹拖到此处或点击选择文件",
+            "title": "创建文档"
+        }
     }
 }

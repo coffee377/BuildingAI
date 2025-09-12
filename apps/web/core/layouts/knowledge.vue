@@ -141,13 +141,13 @@ function convertUtcToBeijingTime(utcTimeStr: string) {
                             //     icon: 'i-lucide-settings-2',
                             //     to: `/public/knowledge/${knowledgeId}/explore`,
                             // },
-                            hasAccessByCodes(['ai-datasets:update'])
-                                ? {
-                                      label: $t('knowledge.menu.settings'),
-                                      icon: 'i-lucide-settings-2',
-                                      to: `/public/knowledge/${knowledgeId}/settings`,
-                                  }
-                                : null,
+                            // hasAccessByCodes(['ai-datasets:update'])
+                            //     ? {
+                            //           label: $t('knowledge.menu.settings'),
+                            //           icon: 'i-lucide-settings-2',
+                            //           to: `/public/knowledge/${knowledgeId}/settings`,
+                            //       }
+                            //     : null,
                         ].filter(Boolean) as NavigationMenuItem[]
                     "
                     class="data-[orientation=vertical]:w-full"
