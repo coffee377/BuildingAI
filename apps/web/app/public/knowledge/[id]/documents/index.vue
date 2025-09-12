@@ -21,6 +21,7 @@ const UIcon = resolveComponent("UIcon");
 const UInput = resolveComponent("UInput");
 const TimeDisplay = resolveComponent("TimeDisplay");
 
+const refresh = inject<() => Promise<void>>("knowledge");
 const route = useRoute();
 const router = useRouter();
 const toast = useMessage();
@@ -233,7 +234,7 @@ const handleCreate = async () => {
             confirmText: t("console-common.confirm"),
             ui: {},
         });
-        apiCreateDocument(unref(files), unref(kid));
+        apiCreateDocument(unref(files), unref(kid), refresh);
         toast.success(t("common.message.createSuccess") + "，后台异步处理中，请稍后查询！");
     } catch (error) {
         console.error("文档创建失败:", error);
@@ -255,6 +256,7 @@ const handleDelete = async (docId: string) => {
             },
         });
         await apiDeleteDocument(docId, kid.value);
+        await refresh?.();
         toast.success(t("common.message.deleteSuccess"));
         // 刷新数据
         await getLists();

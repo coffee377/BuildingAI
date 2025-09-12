@@ -115,21 +115,6 @@ const handleSettings = (data: CollectionResponse) => {
 const handleCreate = () => {
     const routePath = "/public/knowledge/create";
     !!routePath && router.push(routePath);
-    // try {
-    //     await useModal({
-    //         title: t("knowledge.create.title"),
-    //         // description: t("knowledge.delete.desc"),
-    //         // color: "info",
-    //     });
-    //
-    //     // await apiDeleteKnowledge(data.id);
-    //
-    //     await getLists();
-    //
-    //     toast.success(t("common.message.createSuccess"));
-    // } catch (error) {
-    //     console.error("知识库创建失败:", error);
-    // }
 };
 </script>
 

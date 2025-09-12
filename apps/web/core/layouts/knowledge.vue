@@ -8,7 +8,7 @@ const { hasAccessByCodes } = useAccessControl();
 const knowledgeId = computed(() => (route.params as Record<string, string>).id);
 const collapsed = ref<boolean>(false);
 
-const { data, pending } = await useAsyncData(`dataset-detail-${knowledgeId.value}`, () =>
+const { data, pending, refresh } = await useAsyncData(`dataset-detail-${knowledgeId.value}`, () =>
     apiGetKnowledgeDetail(knowledgeId.value),
 );
 
@@ -31,6 +31,8 @@ function convertUtcToBeijingTime(utcTimeStr: string) {
     // 4. 拼接为目标格式
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
+
+provide("knowledge", refresh);
 </script>
 
 <template>
@@ -109,7 +111,6 @@ function convertUtcToBeijingTime(utcTimeStr: string) {
                                       icon: 'i-lucide-files',
                                       to: `/public/knowledge/${knowledgeId}/documents`,
                                       active: [
-                                          `/public/knowledge/${knowledgeId}`,
                                           `/public/knowledge/${knowledgeId}/documents`,
                                       ].includes(route.path),
                                   }

@@ -41,17 +41,18 @@ const handleViewDetail = () => {
 
 // 下拉菜单选项
 const menuItems: DropdownMenuItem[] = [
-    hasAccessByCodes(["ai-datasets:update"])
-        ? {
-              label: t("knowledge.menu.settings"),
-              color: "primary",
-              onSelect: () => emit("settings", props.data),
-          }
-        : null,
+    // hasAccessByCodes(["ai-datasets:update"])
+    //     ? {
+    //           label: t("knowledge.menu.settings"),
+    //           color: "primary",
+    //           onSelect: () => emit("settings", props.data),
+    //       }
+    //     : null,
     hasAccessByCodes(["ai-datasets:delete"])
         ? {
               label: t("console-common.delete"),
               color: "error",
+              icon: "i-lucide-trash",
               onSelect: () => emit("delete", props.data),
           }
         : null,

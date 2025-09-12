@@ -1,10 +1,10 @@
 import type {
     CollectionResponse,
-    DocumentResponse,
     WrappedBooleanResponse,
     WrappedCollectionResponse,
     WrappedCollectionsResponse,
     WrappedDocumentsResponse,
+    WrappedUsersResponse,
 } from "r2r-js";
 import { r2rClient } from "r2r-js";
 
@@ -26,8 +26,8 @@ export interface QueryKnowledgeParams extends Pagination {
 
 function getOffsetAndLimit(rest: Pagination): { offset: number; limit: number } {
     const { page, pageSize } = rest;
-    const offset = ((page || 1) - 1) * (pageSize || 10);
-    const limit = pageSize ?? 10;
+    const offset = ((page || 1) - 1) * (pageSize || 100);
+    const limit = pageSize ?? 100;
     return { offset, limit };
 }
 
@@ -82,6 +82,22 @@ interface TransformResult {
     original?: string;
 }
 
+/**
+ * 去掉文件名中的后缀
+ * @param {string} filename - 原始文件名
+ * @returns {string} 去掉后缀后的文件名
+ */
+function removeFileExtension(filename) {
+    // 找到最后一个点的位置
+    const lastDotIndex = filename.lastIndexOf(".");
+    // 如果没有点，或者点是第一个字符（如".gitignore"），则返回原文件名
+    if (lastDotIndex <= 0) {
+        return filename;
+    }
+    // 截取从开始到最后一个点之前的部分
+    return filename.substring(0, lastDotIndex);
+}
+
 async function transformFile(file: File): Promise<{ file: File; meta: any }> {
     const data = new FormData();
     data.append("file", file);
@@ -91,7 +107,9 @@ async function transformFile(file: File): Promise<{ file: File; meta: any }> {
         body: data as FormData,
     });
 
-    const meta = {};
+    const meta = {
+        filename: removeFileExtension(file.name),
+    };
 
     const json: TransformResult = (await res.json()) ?? {};
     const { converted, original } = json;
@@ -129,32 +147,16 @@ interface FileInfo {
 }
 
 /**
- * 去掉文件名中的后缀
- * @param {string} filename - 原始文件名
- * @returns {string} 去掉后缀后的文件名
- */
-function removeFileExtension(filename) {
-    // 找到最后一个点的位置
-    const lastDotIndex = filename.lastIndexOf(".");
-
-    // 如果没有点，或者点是第一个字符（如".gitignore"），则返回原文件名
-    if (lastDotIndex <= 0) {
-        return filename;
-    }
-
-    // 截取从开始到最后一个点之前的部分
-    return filename.substring(0, lastDotIndex);
-}
-
-/**
  * 创建文档
  * @returns 创建的文档信息
  * @param uploadFiles
  * @param knowledgeId
+ * @param callback
  */
 export async function apiCreateDocument(
     uploadFiles: File | File[],
     knowledgeId: string,
+    callback?: () => void | Promise<void>,
 ): Promise<void> {
     try {
         // 获取所有已上传文档
@@ -206,6 +208,8 @@ export async function apiCreateDocument(
                 }
             }
         }
+
+        callback?.();
     } catch (e) {
         throw new Error(e);
     }
@@ -262,4 +266,29 @@ export async function apiDeleteDocument(
     } catch (e) {
         return Promise.resolve({ success: false });
     }
+}
+
+/**
+ * 查询知识库文档请求参数
+ */
+export interface QueryKnowledgeUserParams extends Pagination {
+    /**
+     * 知识库 id
+     */
+    knowledgeId: string;
+}
+
+export async function apiListKnowledgeUser(
+    params: QueryKnowledgeUserParams,
+): Promise<WrappedUsersResponse> {
+    const { knowledgeId, ...rest } = params;
+    const { offset, limit } = getOffsetAndLimit(rest);
+    return client.collections.listUsers({ id: knowledgeId, offset, limit });
+}
+
+export async function apiDeleteKnowledgeUser(
+    id: string,
+    knowledgeId: string,
+): Promise<WrappedBooleanResponse> {
+    return client.users.removeFromCollection({ id, collectionId: knowledgeId });
 }
