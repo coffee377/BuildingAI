@@ -1,9 +1,12 @@
 import type {
     CollectionResponse,
     WrappedBooleanResponse,
+    WrappedChunksResponse,
     WrappedCollectionResponse,
     WrappedCollectionsResponse,
     WrappedDocumentsResponse,
+    WrappedEntitiesResponse,
+    WrappedRelationshipsResponse,
     WrappedUsersResponse,
 } from "r2r-js";
 import { r2rClient } from "r2r-js";
@@ -13,6 +16,10 @@ import type { Pagination } from "@/models";
 
 // http://localhost:7272 or the address that you are running the R2R server
 export const client = new r2rClient(app.R2R_API_PREFIX);
+// client.users.login({ email: "coffee377@dingtalk.com", password: "coffee377" }).then((res) => {
+//     // console.log(res.results);
+// });
+// client.users.logout();
 
 /**
  * 查询知识库请求参数
@@ -320,4 +327,40 @@ export async function apiAddKnowledgeUser(
     knowledgeId: string,
 ): Promise<WrappedBooleanResponse> {
     return client.users.addToCollection({ id: userId, collectionId: knowledgeId });
+}
+
+/**
+ * 列出文档 Chunks
+ * @param params
+ */
+export async function apiListDocumentChunks(params: {
+    docId: string;
+}): Promise<WrappedChunksResponse> {
+    const { knowledgeId, ...rest } = params;
+    const { offset, limit } = getOffsetAndLimit(rest);
+    return client.documents.listChunks({ id: params.docId, offset, limit });
+}
+
+/**
+ * 列出文档 Entities
+ * @param params
+ */
+export async function apiListDocumentEntities(params: {
+    docId: string;
+}): Promise<WrappedEntitiesResponse> {
+    const { knowledgeId, ...rest } = params;
+    const { offset, limit } = getOffsetAndLimit(rest);
+    return client.documents.listEntities({ id: params.docId, offset, limit });
+}
+
+/**
+ * 列出文档 Relationships
+ * @param params
+ */
+export async function apiListDocumentRelationships(params: {
+    docId: string;
+}): Promise<WrappedRelationshipsResponse> {
+    const { knowledgeId, ...rest } = params;
+    const { offset, limit } = getOffsetAndLimit(rest);
+    return client.documents.listRelationships({ id: params.docId, offset, limit });
 }

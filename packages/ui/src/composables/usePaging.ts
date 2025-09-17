@@ -32,7 +32,7 @@ export function usePaging<T = any>(options: Options) {
             ...params,
         })
             .then((res: any) => {
-                paging.total = res?.total ?? res?.total_entries;
+                paging.total = res?.total ?? res?.totalEntries;
                 paging.items = res?.items ?? res?.results;
                 paging.extend = res?.extend;
                 paging.needPolling = res?.needPolling || false;

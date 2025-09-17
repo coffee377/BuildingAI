@@ -13,6 +13,7 @@ import {
 } from "@/services/web/knowledge";
 
 import Create from "./create.vue";
+import DocView from "./view.vue";
 
 const UButton = resolveComponent("UButton");
 const UBadge = resolveComponent("UBadge");
@@ -167,6 +168,7 @@ const columns: TableColumn<DocumentResponse>[] = [
         cell: ({ row }) => {
             return (
                 <div class="space-x-1">
+                    <DocView docId={row.original.id} />
                     <UTooltip delayDuration={100} text={t("knowledge.documents.download")}>
                         <UButton
                             icon="i-lucide-download"
