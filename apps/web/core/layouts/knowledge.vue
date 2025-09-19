@@ -105,23 +105,19 @@ provide("knowledge", refresh);
                     :collapsed="collapsed"
                     :items="
                         [
-                            hasAccessByCodes(['ai-datasets-documents:list'])
-                                ? {
-                                      label: $t('knowledge.menu.documents'),
-                                      icon: 'i-lucide-files',
-                                      to: `/public/knowledge/${knowledgeId}/documents`,
-                                      active: [
-                                          `/public/knowledge/${knowledgeId}/documents`,
-                                      ].includes(route.path),
-                                  }
-                                : null,
-                            hasAccessByCodes(['ai-datasets-team-members:list'])
-                                ? {
-                                      label: $t('knowledge.menu.members'),
-                                      icon: 'i-lucide-users',
-                                      to: `/public/knowledge/${knowledgeId}/members`,
-                                  }
-                                : null,
+                            {
+                                label: $t('knowledge.menu.documents'),
+                                icon: 'i-lucide-files',
+                                to: `/public/knowledge/${knowledgeId}/documents`,
+                                active: [`/public/knowledge/${knowledgeId}/documents`].includes(
+                                    route.path,
+                                ),
+                            },
+                            {
+                                label: $t('knowledge.menu.members'),
+                                icon: 'i-lucide-users',
+                                to: `/public/knowledge/${knowledgeId}/members`,
+                            },
                             // {
                             //     label: $t('knowledge.menu.entities'),
                             //     icon: 'i-lucide-settings-2',

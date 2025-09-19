@@ -296,7 +296,7 @@ definePageMeta({ layout: "knowledge" });
 
             <div class="flex items-center gap-2 md:ml-auto">
                 <UButton leading-icon="i-lucide-search" @click="getLists" label="查询"></UButton>
-                <AccessControl :codes="['ai-datasets-documents:create']">
+                <AccessControl :codes="[]">
                     <UButton
                         :label="t('knowledge.documents.create.title')"
                         leading-icon="i-lucide-plus"

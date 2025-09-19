@@ -26,10 +26,14 @@ const userStore = useUserStore();
  * 计算是否有权限显示内容
  */
 const hasPermission = computed(() => {
-    return props.codes.every((c) => permissionStore.hasPermission(c));
+    return (
+        !props.codes ||
+        props.codes.length == 0 ||
+        props.codes.every((c) => permissionStore.hasPermission(c))
+    );
 });
 </script>
 
 <template>
-    <slot v-if="hasPermission || userStore.userInfo?.isRoot" />
+    <slot v-if="hasPermission || userStore.userInfo?.['isRoot']" />
 </template>

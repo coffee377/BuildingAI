@@ -48,14 +48,12 @@ const menuItems: DropdownMenuItem[] = [
     //           onSelect: () => emit("settings", props.data),
     //       }
     //     : null,
-    hasAccessByCodes(["ai-datasets:delete"])
-        ? {
-              label: t("console-common.delete"),
-              color: "error",
-              icon: "i-lucide-trash",
-              onSelect: () => emit("delete", props.data),
-          }
-        : null,
+    {
+        label: t("console-common.delete"),
+        color: "error",
+        icon: "i-lucide-trash",
+        onSelect: () => emit("delete", props.data),
+    },
 ].filter(Boolean) as DropdownMenuItem[];
 </script>
 

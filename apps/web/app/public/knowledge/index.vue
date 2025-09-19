@@ -163,7 +163,7 @@ const handleCreate = () => {
                             class="grid grid-cols-1 gap-6 py-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                         >
                             <!-- 创建知识库卡片 -->
-                            <AccessControl :codes="['ai-datasets:create']">
+                            <AccessControl :codes="[]">
                                 <div
                                     class="group border-default relative cursor-pointer rounded-lg border border-dashed p-4 transition-all duration-200 hover:shadow-lg"
                                     @click="handleCreate"
