@@ -82,7 +82,7 @@ export const useUserStore = defineStore("auth", () => {
                 },
             });
         }
-
+        client.users.logout().then();
         clearToken();
         userInfo.value = null;
         reloadNuxtApp({
@@ -94,14 +94,10 @@ export const useUserStore = defineStore("auth", () => {
         const needRedirect = route?.meta.auth !== false;
         if (!needRedirect) return;
 
-        return useRouter()
-            .replace({
-                path: `${ROUTES.HOME}?redirect=${route?.fullPath}`,
-                replace: true,
-            })
-            .then(() => {
-                client.users.logout();
-            });
+        return useRouter().replace({
+            path: `${ROUTES.HOME}?redirect=${route?.fullPath}`,
+            replace: true,
+        });
     };
 
     /** 去登录 */
