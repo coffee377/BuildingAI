@@ -187,6 +187,7 @@ export class AiChatMessageController extends BaseController {
             const metadata: Shared.Metadata = {
                 userId: playground.id,
                 userName: playground.username,
+                ...dto.metadata,
             };
 
             do {
@@ -594,6 +595,7 @@ export class AiChatMessageController extends BaseController {
             const metadata: Shared.Metadata = {
                 userId: playground.id,
                 userName: playground.username,
+                ...dto.metadata,
             };
 
             do {
