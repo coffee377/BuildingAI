@@ -2,6 +2,7 @@
 import { ProChatScroll, ProMarkdown, ProScrollArea, useMessage } from "@fastbuildai/ui";
 import { nextTick, onMounted, onUnmounted, watch } from "vue";
 
+import type { MetaConfiguration } from "@/common/components/chat-prompt.vue";
 import { useChat } from "@/common/composables/useChat";
 import { STORAGE_KEYS } from "@/common/constants";
 import type { QuickMenu } from "@/models";
@@ -34,6 +35,7 @@ const quickMenu = ref<QuickMenu>();
 
 // 提取链接 query
 const modelId = ref("");
+const meta = ref<MetaConfiguration>({});
 
 const { data: messagesData, pending: loading } = await useAsyncData(
     `chat-messages-${currentConversationId.value}`,
@@ -55,6 +57,15 @@ hasMore.value = messagesData.value.total > messagesData.value.items.length;
 const { data: currentConversation } = await useAsyncData(
     `chat-detail-${currentConversationId.value}`,
     () => apiGetAiConversationDetail(currentConversationId.value as string),
+);
+
+watch(
+    currentConversation,
+    (val: Record<string, any> = {}) => {
+        const { metadata } = val;
+        meta.value = metadata ?? {};
+    },
+    { deep: true, immediate: true },
 );
 
 const { data: chatConfig } = await useAsyncData("chat-config", () => apiGetChatConfig());
@@ -87,6 +98,7 @@ const { messages, input, handleSubmit, reload, stop, status, error } = useChat({
             return currentConversationId.value;
         },
         // options: { temperature: 0.7 },
+        metadata: unref(meta),
     },
     onToolCall(message) {
         scrollToBottom();
@@ -105,7 +117,7 @@ const { messages, input, handleSubmit, reload, stop, status, error } = useChat({
         refreshNuxtData("chats");
         refreshNuxtData(`chat-detail-${currentConversationId.value}`);
     },
-});
+} as UseChatOptions);
 
 const isLoading = computed(() => status.value === "loading");
 
@@ -380,6 +392,7 @@ definePageMeta({ activePath: "/" });
             <div class="w-full max-w-[800px]">
                 <ChatPrompt
                     v-model="input"
+                    :meta-configuration="meta"
                     :is-loading="isLoading"
                     class="sticky bottom-0 z-10 [view-transition-name:chat-prompt]"
                     @stop="stop"
@@ -409,7 +422,7 @@ definePageMeta({ activePath: "/" });
                         >
                             <UAvatar
                                 v-if="quickMenu?.icon"
-                                :src="quickMenu?.icon"
+                                :src="quickMenu?.icon!"
                                 :ui="{ root: 'size-4 rounded-md' }"
                             />
                             {{ quickMenu?.alias || quickMenu?.name }}

@@ -9,31 +9,53 @@ interface TextareaInstance {
 
 const emits = defineEmits<{
     (e: "update:modelValue", v: string): void;
-    (e: "submit", v: string): void;
+    (e: "update:metaConfiguration", v: MetaConfiguration): void;
+    (e: "submit", v: string, meta?: Record<string, any>): void;
     (e: "stop"): void;
 }>();
 
 const { t } = useI18n();
 const userStore = useUserStore();
 
-const props = withDefaults(
-    defineProps<{
-        modelValue: string;
-        placeholder?: string;
-        isLoading?: boolean;
-        rows?: number;
-    }>(),
-    {
-        modelValue: "",
-        placeholder: "",
-        isLoading: false,
-        rows: 1,
-    },
-);
+export interface MetaConfiguration {
+    /**
+     * 是否启用会话记忆
+     */
+    memory?: boolean;
+    /**
+     * 是否启用问题重写
+     */
+    rewrite?: boolean;
+    /**
+     * 知识库
+     */
+    kb?: { id: string; name: string };
+    /**
+     * 添加的文件
+     */
+    files?: File[];
+}
+
+interface ChatPromptProps {
+    modelValue: string;
+    metaConfiguration?: MetaConfiguration;
+    placeholder?: string;
+    isLoading?: boolean;
+    rows?: number;
+}
+
+const props = withDefaults(defineProps<ChatPromptProps>(), {
+    modelValue: "",
+    metaConfiguration: () => ({}),
+    placeholder: "",
+    isLoading: false,
+    rows: 1,
+});
 
 const uTextareaRefs = useTemplateRef<TextareaInstance | null>("uTextareaRefs");
 const textareaElement = computed(() => uTextareaRefs.value?.textareaRef || null);
 const inputValue = useVModel(props, "modelValue", emits);
+const meta = useVModel(props, "metaConfiguration", emits);
 
 const { focused: isFocused } = useFocus(textareaElement, { initialValue: false });
 
@@ -60,7 +82,7 @@ function handleKeydown(event: KeyboardEvent) {
             emits("stop");
         } else {
             // 如果不在加载，按回车发送
-            emits("submit", inputValue.value);
+            emits("submit", inputValue.value, unref(meta));
         }
     }
 }
@@ -71,7 +93,7 @@ function handleSubmit() {
         emits("stop");
     } else {
         if (!inputValue.value.trim() && !props.isLoading) return;
-        emits("submit", inputValue.value);
+        emits("submit", inputValue.value, unref(meta));
     }
 }
 
@@ -90,6 +112,7 @@ onMounted(() =>
         :class="isFocused ? 'ring-primary/15 border-primary ring-3' : 'border-border'"
         @click.stop="handleFocus"
     >
+        <div class="border border-dashed border-red-500">{{ meta }}</div>
         <div class="flex items-center gap-2">
             <slot name="panel-top"> </slot>
         </div>
@@ -115,10 +138,10 @@ onMounted(() =>
             <!-- 功能模块 -->
             <div class="flex items-center gap-2">
                 <slot name="panel-left">
-                    <div>
-                        <!--  -->
-                    </div>
+                    <!--  -->
                 </slot>
+                <UCheckbox label="启用会话记忆" v-model="meta.memory" />
+                <UCheckbox label="启用问题重写" v-model="meta.rewrite" />
             </div>
             <!-- 发送 -->
             <slot name="panel-right">

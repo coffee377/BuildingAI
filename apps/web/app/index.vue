@@ -90,13 +90,14 @@ const getQuickMenu = async () => {
     isQuickMenu.value = readMcpIdsFromStorage().includes(QUICK_MENU_MCP_ID.value!);
 };
 
-async function createChat(prompt: string) {
+async function createChat(prompt: string, metadata?: Record<string, any>) {
     try {
         if (!selectedModelId.value && useUserStore().isLogin)
             return useMessage().warning(t("common.chat.selectModel"));
 
         const chat = await apiCreateAiConversation({
             title: "",
+            metadata,
         });
 
         useCookie(STORAGE_KEYS.AI_CONVERSATION_TITLE).value = JSON.stringify({
@@ -210,7 +211,6 @@ definePageMeta({
                         <template #panel-left>
                             <ModelSelect
                                 v-model="selectedModelId"
-                                :modelId="selectedModelId || ''"
                                 :supportedModelTypes="['llm']"
                                 placeholder="选择AI模型开始对话"
                             />
@@ -230,7 +230,7 @@ definePageMeta({
                             >
                                 <UAvatar
                                     v-if="quickMenu?.icon"
-                                    :src="quickMenu?.icon"
+                                    :src="quickMenu?.icon!"
                                     :ui="{ root: 'size-4 rounded-md' }"
                                 />
                                 {{ quickMenu?.alias || quickMenu?.name }}
