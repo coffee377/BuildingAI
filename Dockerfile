@@ -31,7 +31,7 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 # 如果你修补了任何包，在运行 pnpm fetch 前包含补丁
 #COPY patches patches
 # 安装依赖
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch --frozen-lockfile
 
 # 03. 构建层
 FROM deps AS build
@@ -43,11 +43,12 @@ RUN pnpm -F ./apps/server run build \
     && pnpm -F ./apps/web run generate
 
 # 04. 生产层
-FROM $NODE_IMAGE AS production
-WORKDIR $SOURCE_CODE_DIR
-COPY --from=build $SOURCE_CODE_DIR/apps/server/dist ./apps/server/dist
-COPY --from=build $SOURCE_CODE_DIR/apps/server/data ./apps/server/data
-COPY --from=build $SOURCE_CODE_DIR/apps/web/.output/public/ ./public/web
+FROM base AS production
+WORKDIR /code
+COPY --from=build /code/.node_modules ./
+COPY --from=build /code/apps/server/dist ./apps/server/dist
+COPY --from=build /code/apps/server/data ./apps/server/data
+COPY --from=build /code/apps/web/.output/public/ ./public/web
 
 ENV NODE_ENV=production \
     TZ=Asia/Shanghai \
