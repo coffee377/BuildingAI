@@ -62,8 +62,9 @@ const { data: currentConversation } = await useAsyncData(
 watch(
     currentConversation,
     (val: Record<string, any> = {}) => {
-        const { metadata } = val;
-        meta.value = metadata ?? {};
+        // const { metadata } = val;
+        // meta.value = metadata ?? {};
+        meta.value = { memory: true };
     },
     { deep: true, immediate: true },
 );
@@ -390,6 +391,7 @@ definePageMeta({ activePath: "/" });
             </ProScrollArea>
 
             <div class="w-full max-w-[800px]">
+                <div>{{ currentConversation["metadata"] }}</div>
                 <ChatPrompt
                     v-model="input"
                     :meta-configuration="meta"
