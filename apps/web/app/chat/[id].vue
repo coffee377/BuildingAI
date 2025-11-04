@@ -99,7 +99,9 @@ const { messages, input, handleSubmit, reload, stop, status, error } = useChat({
             return currentConversationId.value;
         },
         // options: { temperature: 0.7 },
-        metadata: unref(meta),
+        get metadata() {
+            return unref(meta);
+        },
     },
     onToolCall(message) {
         scrollToBottom();

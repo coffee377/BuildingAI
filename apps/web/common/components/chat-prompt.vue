@@ -42,6 +42,7 @@ interface ChatPromptProps {
     placeholder?: string;
     isLoading?: boolean;
     rows?: number;
+    debug?: boolean;
 }
 
 const props = withDefaults(defineProps<ChatPromptProps>(), {
@@ -50,6 +51,7 @@ const props = withDefaults(defineProps<ChatPromptProps>(), {
     placeholder: "",
     isLoading: false,
     rows: 1,
+    debug: false,
 });
 
 const uTextareaRefs = useTemplateRef<TextareaInstance | null>("uTextareaRefs");
@@ -112,6 +114,7 @@ onMounted(() =>
         :class="isFocused ? 'ring-primary/15 border-primary ring-3' : 'border-border'"
         @click.stop="handleFocus"
     >
+        <div v-if="debug" class="border border-dashed border-red-500">{{ meta }}</div>
         <div class="flex items-center gap-2">
             <slot name="panel-top"> </slot>
         </div>

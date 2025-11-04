@@ -106,7 +106,7 @@ async function createChat(prompt: string, metadata?: Record<string, any>) {
             id: chat.id,
         });
 
-        useLocalStorage(chat.id, metadata);
+        !!metadata && useLocalStorage(chat.id, metadata);
 
         refreshNuxtData("chats");
         navigateTo({
