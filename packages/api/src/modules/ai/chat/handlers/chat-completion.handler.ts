@@ -111,6 +111,9 @@ export class ChatCompletionCommandHandler {
             if (tools.length > 0) {
                 chatParams.tools = tools;
                 chatParams.tool_choice = "auto";
+            } else {
+                chatParams.tools = [];
+                chatParams.tool_choice = "none";
             }
 
             // Call AI service
@@ -256,6 +259,9 @@ export class ChatCompletionCommandHandler {
             if (tools.length > 0) {
                 chatParams.tools = tools;
                 chatParams.tool_choice = "auto";
+            } else {
+                chatParams.tools = [];
+                chatParams.tool_choice = "none";
             }
 
             const stream = await client.chat.stream(chatParams);
