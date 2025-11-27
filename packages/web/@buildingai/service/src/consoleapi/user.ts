@@ -7,6 +7,7 @@
  */
 
 import type { PaginationResult } from "../models/globals";
+import { client } from "../webapi/knowledge";
 import type {
     UserCreateRequest,
     UserInfo,
@@ -78,8 +79,14 @@ export function apiGetUserInfo(): Promise<ConsoleUserInfo> {
  * @param data User creation data
  * @returns Promise with created user information
  */
-export function apiCreateUser(data: UserCreateRequest): Promise<UserInfo> {
-    return useConsolePost("/users", data);
+export async function apiCreateUser(data: UserCreateRequest): Promise<UserInfo> {
+    const user = await useConsolePost<UserInfo>("/users", data);
+    const email = user.email;
+    const password = email?.trim().split("@")[0] + "@123456";
+    if (email && password) {
+        await client.users.create({ email, password });
+    }
+    return user;
 }
 
 /**

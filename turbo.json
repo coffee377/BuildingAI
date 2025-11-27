@@ -56,7 +56,9 @@
         "NODE_APP_INSTANCE",
         "pm_id",
         "APP_DOMAIN",
-        "EXTENSION_IDENTIFIER"
+        "EXTENSION_IDENTIFIER",
+        "VITE_APP_R2R_API_PREFIX",
+        "VITE_APP_FILE_CONVERSION_API_PREFIX"
     ],
     "tasks": {
         "build": {
