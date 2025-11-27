@@ -53,6 +53,7 @@
             "nicknameRequired": "Nickname required",
             "email": "Email",
             "emailInput": "Enter email",
+            "emailRequired": "Email required",
             "emailFormat": "Invalid email format",
             "phone": "Phone",
             "phoneInput": "Enter phone",

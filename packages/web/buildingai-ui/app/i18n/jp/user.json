@@ -53,6 +53,7 @@
             "nicknameRequired": "ニックネームは必須です",
             "email": "メール",
             "emailInput": "メールアドレスを入力",
+            "emailRequired": "メールボックスは空にできません",
             "emailFormat": "メール形式が不正です",
             "phone": "電話番号",
             "phoneInput": "電話番号を入力",

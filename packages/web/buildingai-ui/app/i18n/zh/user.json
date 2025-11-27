@@ -53,6 +53,7 @@
             "nicknameRequired": "昵称不能为空",
             "email": "邮箱",
             "emailInput": "请输入邮箱地址",
+            "emailRequired": "邮箱不能为空",
             "emailFormat": "邮箱格式不正确",
             "phone": "手机号",
             "phoneInput": "请输入手机号",
