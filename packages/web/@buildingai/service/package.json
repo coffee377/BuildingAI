@@ -25,11 +25,12 @@
         "src"
     ],
     "dependencies": {
-        "@buildingai/constants": "workspace:*"
+        "@buildingai/constants": "workspace:*",
+        "r2r-js": "^0.4.43"
     },
     "devDependencies": {
-        "@buildingai/types": "workspace:*",
         "@buildingai/eslint-config": "workspace:*",
+        "@buildingai/types": "workspace:*",
         "@buildingai/typescript-config": "workspace:*",
         "@tsconfig/node22": "catalog:dev"
     }
