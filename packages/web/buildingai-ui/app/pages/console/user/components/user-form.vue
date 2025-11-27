@@ -174,7 +174,7 @@ const mountEditPowerModal = async (): Promise<void> => {
     }
 };
 
-const mountEditPasswordModal = async (): Promise<void> => {
+const mountEditPasswordModal = async () => {
     if (!props.id) return;
 
     const modal = overlay.create(EditPassword);
@@ -203,7 +203,7 @@ const { isLock, lockFn: submitForm } = useLockFn(async () => {
         //     formData.levelEndTime = undefined;
         // }
         // 发送事件，由父组件处理提交逻辑
-        emit("submit-success", { ...formData });
+        emit("submit-success", formData);
     } catch (error) {
         console.error(t("user.backend.form.formValidationFailed") + ":", error);
         return false;
