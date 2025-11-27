@@ -241,7 +241,7 @@ definePageMeta({
 
                 <!-- 建议选项 -->
                 <div
-                    class="my-4 flex w-full flex-wrap justify-center gap-3"
+                    class="justify-left my-4 flex w-full flex-wrap gap-3 px-4"
                     v-if="suggestionsEnabled"
                 >
                     <UButton
@@ -250,6 +250,7 @@ definePageMeta({
                         variant="outline"
                         color="neutral"
                         size="md"
+                        class="text-left"
                         @click="createChat(suggestion.text)"
                     >
                         <span class="mr-1">{{ suggestion.icon }}</span>
