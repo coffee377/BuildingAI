@@ -85,8 +85,10 @@ const getQuickMenu = async (): Promise<void> => {
 /**
  * Create a new chat conversation
  * @param prompt - The initial prompt for the conversation
+ * @param metadata
  */
-async function createChat(prompt: string): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function createChat(prompt: string, metadata?: Record<string, any>): Promise<void> {
     try {
         // Validate model selection for logged-in users
         if (!selectedModelId.value && useUserStore().isLogin) {
@@ -105,6 +107,10 @@ async function createChat(prompt: string): Promise<void> {
             title: prompt,
             files: files.value.length > 0 ? files.value : undefined,
         });
+
+        if (metadata) {
+            useLocalStorage(chat.id, metadata);
+        }
 
         // Refresh chat data and navigate to new conversation
         refreshNuxtData("chats");

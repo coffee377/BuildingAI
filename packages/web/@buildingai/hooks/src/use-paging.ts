@@ -36,12 +36,12 @@ export function usePaging<T = any>(options: Options) {
             ...params,
         })
             .then((res: any) => {
-                paging.total = res?.total;
+                paging.total = res?.total ?? res?.totalEntries;
                 if (isAppend) {
                     // eslint-disable-next-line no-unsafe-optional-chaining
                     paging.items = [...paging.items, ...res?.items];
                 } else {
-                    paging.items = res?.items;
+                    paging.items = res?.items ?? res?.results;
                 }
                 paging.extend = res?.extend;
                 paging.needPolling = res?.needPolling || false;
