@@ -103,6 +103,14 @@ export class ChatRequestDto {
     @IsOptional()
     @IsArray({ message: "MCP服务器列表必须是数组" })
     mcpServers?: string[];
+
+    /**
+     * 扩展数据
+     */
+    @IsObject({ message: "扩展数据必须是对象" })
+    @IsOptional()
+    @Transform(({ value }) => value || {})
+    metadata?: Record<string, any>;
 }
 
 /**
