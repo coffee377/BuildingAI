@@ -1,0 +1,70 @@
+{
+    "title": "知识库",
+    "subtitle": "汇聚优质 AI 知识，深化智能认知",
+    "searchPlaceholder": "搜索知识库名称或 ID ...",
+    "card": {
+        "documents": "文档",
+        "members": "成员"
+    },
+    "menu": {
+        "settings": "设置",
+        "documents": "文档",
+        "members": "成员",
+        "entities": "实体",
+        "relationships": "关系",
+        "communities": "社区",
+        "explore": "探索"
+    },
+    "create": {
+        "title": "创建知识库",
+        "desc": "导入您自己的文本数据或通过文件上传您的文档进行创建知识库",
+        "form": {
+            "basicInfo": "基本信息",
+            "basicInfoDesc": "您可以设置您的知识库名称以及知识库描述，这将帮助您有效管理您的知识库。",
+            "submit": "创建知识库"
+        },
+        "success": "知识库创建成功"
+    },
+    "delete": {
+        "title": "删除知识库",
+        "desc": "确定要删除选中的知识库吗？删除后将无法恢复，包括所有文档和相关数据。"
+    },
+    "graph": {
+        "cluster": {
+            "status": "集群",
+            "statusTip": "知识库图集群状态"
+        },
+        "sync": {
+            "status": "同步",
+            "statusTip": "知识库图同步状态"
+        },
+        "clusterStatus": "知识库图集群状态",
+        "syncStatus": "知识库图同步状态"
+    },
+    "details": {
+        "documentCount": "文档数量",
+        "userCount": "用户数量",
+        "graphClusterStatus": "集群状态",
+        "graphSyncStatus": "同步状态",
+        "createdAt": "创建时间",
+        "updatedAt": "更新时间"
+    },
+    "documents": {
+        "table": {
+            "fileName": "文件名",
+            "fileSize": "文件大小",
+            "fileType": "文件类型",
+            "originalFileName": "原始文件",
+            "ingestionStatus": "摄入状态",
+            "extractionStatus": "提取状态",
+            "createdAt": "上传时间"
+        },
+        "download": "下载",
+        "delete": "删除",
+        "view": "查看",
+        "create": {
+            "dragOrSelectFiles": "将文件或文件夹拖到此处或点击选择文件",
+            "title": "创建文档"
+        }
+    }
+}
