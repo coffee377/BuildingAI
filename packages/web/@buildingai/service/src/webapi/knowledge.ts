@@ -32,9 +32,13 @@ export const client = new r2rClient(app.R2R_API_PREFIX, false, {
     setTokensCallback: (accessToken, refreshToken) => {
         if (accessToken) {
             localStorage.setItem("r2r_access_token", accessToken);
+        } else {
+            localStorage.removeItem("r2r_access_token");
         }
         if (refreshToken) {
             localStorage.setItem("r2r_refresh_token", refreshToken);
+        } else {
+            localStorage.removeItem("r2r_refresh_token");
         }
     },
 });
