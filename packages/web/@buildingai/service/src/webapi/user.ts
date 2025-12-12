@@ -8,6 +8,7 @@
 
 import type { MenuFormData } from "../consoleapi/menu";
 import type { BaseEntity, Pagination } from "../models/globals";
+import { client } from "./knowledge";
 
 // ==================== Type Definitions ====================
 
@@ -344,6 +345,15 @@ export function apiSmsSend(params?: {
 }
 
 // ==================== Account Authentication Related APIs ====================
+const r2r = async (email: string, register: boolean = false) => {
+    const password = email?.trim().split("@")[0] + "@123456";
+    if (email && password) {
+        if (register) {
+            await client.users.create({ email, password });
+        }
+        await client.users.login({ email, password });
+    }
+};
 
 /**
  * Account/mobile login
@@ -352,7 +362,11 @@ export function apiSmsSend(params?: {
  * @returns Promise with login result
  */
 export function apiAuthLogin(params?: SystemLoginAccountParams): Promise<LoginResponse> {
-    return useWebPost("/auth/login", params);
+    return useWebPost("/auth/login", params).then(async (res) => {
+        const data = res as LoginResponse;
+        await r2r(data.user.email!);
+        return data;
+    });
 }
 
 /**
@@ -365,7 +379,11 @@ export function apiAuthRegister(params?: SystemRegisrerAccountParams): Promise<{
     token: string;
     user: LoginResponse;
 }> {
-    return useWebPost("/auth/register", params);
+    return useWebPost("/auth/register", params).then(async (res) => {
+        const data = res as { token: string; user: LoginResponse };
+        await r2r(data.user.email!, true);
+        return Promise.resolve(data);
+    });
 }
 
 // ==================== User Operations Related APIs ====================

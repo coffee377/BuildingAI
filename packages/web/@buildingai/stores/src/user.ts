@@ -11,6 +11,7 @@ import type { UserInfo } from "@buildingai/service/webapi/user";
 import { apiGetCurrentUserInfo } from "@buildingai/service/webapi/user";
 import { createPinia, defineStore } from "pinia";
 import { computed, shallowRef } from "vue";
+import { client } from "@buildingai/service/webapi/knowledge";
 
 /**
  * User authentication store
@@ -106,6 +107,12 @@ const userStore = defineStore("auth", () => {
                     onExpireNotice.value = false;
                 },
             });
+        }
+
+        try {
+            await client.users.logout();
+        } catch (e) {
+            console.error(e);
         }
 
         clearToken();
