@@ -29,9 +29,9 @@ const registerSchema = object({
         .required(t("login.validation.accountRequired"))
         .min(3, t("login.validation.accountMinLength"))
         .max(20, t("login.validation.accountMaxLength")),
-    // email: string()
-    //   .required(t("login.validation.emailRequired"))
-    //   .email(t("login.validation.emailInvalid")),
+    email: string()
+        .required(t("login.validation.emailRequired"))
+        .email(t("login.validation.emailInvalid")),
     password: string()
         .required(t("login.validation.passwordRequired"))
         .min(6, t("login.validation.passwordMinLength"))
@@ -48,7 +48,7 @@ const registerSchema = object({
 // 表单状态
 const registerState = reactive({
     username: "",
-    // email: '',
+    email: "",
     password: "",
     confirmPassword: "",
 });
@@ -130,7 +130,14 @@ const passwordTextClass = computed(() => {
                 :placeholder="$t('login.placeholders.enterAccount')"
             />
         </UFormField>
-
+        <UFormField :label="$t('login.email')" name="email" class="mt-2" required>
+            <UInput
+                v-model="registerState.email"
+                class="w-full"
+                size="lg"
+                :placeholder="$t('login.placeholders.enterEmail')"
+            />
+        </UFormField>
         <UFormField :label="$t('login.password')" name="password" class="mt-2" required>
             <BdInputPassword
                 v-model="registerState.password"
