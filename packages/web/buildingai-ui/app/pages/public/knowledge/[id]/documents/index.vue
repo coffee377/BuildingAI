@@ -6,7 +6,7 @@ import {
     apiGetDocumentList,
     type QueryDocumentParams,
 } from "@buildingai/service/webapi/knowledge";
-import type { TableColumn, TableRow } from "@nuxt/ui";
+import type { TableColumn } from "@nuxt/ui";
 import type { DocumentResponse } from "r2r-js";
 import { resolveComponent } from "vue";
 
@@ -261,9 +261,6 @@ const handleDelete = async (docId: string) => {
     }
 };
 
-// 点击表格行跳转分段
-const handleRowClick = (row: TableRow<DocumentResponse>) => {};
-
 // 初始化
 onMounted(getLists);
 
@@ -320,7 +317,6 @@ definePageMeta({ layout: "knowledge", auth: false });
                         td: 'border-b border-default ',
                         tr: 'hover:bg-elevated/50',
                     }"
-                    :onSelect="handleRowClick"
                 />
             </div>
         </div>
