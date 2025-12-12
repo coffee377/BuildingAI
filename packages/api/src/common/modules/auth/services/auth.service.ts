@@ -216,7 +216,7 @@ export class AuthService extends BaseService<User> {
     ) {
         // 查找用户
         const user = await this.findOne({
-            where: { username },
+            where: [{ username: username }, { email: username }],
             relations: ["role", "permissions"],
         });
 
