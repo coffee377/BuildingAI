@@ -158,6 +158,7 @@ export class AuthService extends BaseService<User> {
         const savedUser = await this.create(
             {
                 username: registerDto.username,
+                email: registerDto.email,
                 password: hashedPassword,
                 nickname: randomNickname,
                 status: BooleanNumber.YES, // 默认启用

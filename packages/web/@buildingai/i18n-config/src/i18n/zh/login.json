@@ -2,6 +2,7 @@
     "welcomeBack": "欢迎回来！ 👋",
     "waitingForYou": "嘿，等你很久啦～快登录看看有什么新变化吧！",
     "account": "账号",
+    "email": "邮箱",
     "usernamePlaceholder": "请输入用户名/邮箱",
     "password": "密码",
     "passwordPlaceholder": "请输入密码",
@@ -75,6 +76,7 @@
 
     "placeholders": {
         "enterAccount": "请输入账号",
+        "enterEmail": "请输入邮箱",
         "enterPassword": "请输入密码",
         "enterPasswordAgain": "请再次输入密码"
     },

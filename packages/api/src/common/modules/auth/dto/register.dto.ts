@@ -49,9 +49,10 @@ export class RegisterDto {
     nickname?: string;
 
     /**
-     * 邮箱（可选）
+     * 邮箱
      */
     @IsOptional()
+    @IsNotEmpty({ message: "邮箱不能为空" })
     @IsEmail({}, { message: "邮箱格式不正确" })
     email?: string;
 
