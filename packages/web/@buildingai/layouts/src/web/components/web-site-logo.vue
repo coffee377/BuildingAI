@@ -50,7 +50,7 @@ defineOptions({ inheritAttrs: false });
             <Logo v-else class="text-background size-9" :fontControlled="false" filled />
         </div>
         <div
-            class="flex flex-col gap-0.5 truncate leading-none whitespace-nowrap"
+            class="ml-2 flex flex-col gap-0.5 truncate leading-none whitespace-nowrap"
             :class="{ hidden: props.collapsed }"
         >
             <span class="text-sm font-bold">{{ appStore.siteConfig?.webinfo.name }}</span>
