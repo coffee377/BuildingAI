@@ -113,8 +113,7 @@ const handleCreate = () => {
 };
 
 definePageMeta({
-    layout: "full-screen",
-    title: "knowledge.title",
+    title: "知识库（晶奇）",
     auth: false,
     inSystem: true,
     inLinkSelector: true,
