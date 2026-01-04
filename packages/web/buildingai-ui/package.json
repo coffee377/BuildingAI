@@ -39,6 +39,7 @@
         "libphonenumber-js": "^1.12.18",
         "nuxt-svgo": "catalog:web",
         "qrcode.vue": "^3.6.0",
+        "r2r-js": "^0.4.43",
         "reka-ui": "catalog:web",
         "vue-drag-resize": "^2.0.3",
         "vue-i18n": "catalog:web",
