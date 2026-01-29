@@ -9,8 +9,10 @@ import {
     apiGetQuickMenu,
     apiUpdateAiConversation,
 } from "@buildingai/service/webapi/ai-conversation";
+import type { RemovableRef } from "@vueuse/core";
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
 
+import type { MetaConfiguration } from "~/components/ask-assistant-chat/chats-prompt/chats-prompt.vue";
 import { usePreviewSidebar } from "~/components/ask-assistant-chat/preview-sidebar/use-preview-sidebar";
 
 // Reactive state management
@@ -25,7 +27,8 @@ const controlsStore = useControlsStore();
 const chatStore = useChatStore();
 
 // Chat state and configuration
-const currentConversationId = computed(() => (URLQueryParams as Record<string, string>).id);
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const currentConversationId = computed(() => (URLQueryParams as Record<string, string>).id!);
 const queryPaging = shallowReactive({ page: 1, pageSize: 5 });
 const hasMore = shallowRef(false);
 // 直接使用全局状态中的 selectedModel
@@ -59,6 +62,12 @@ const { data: currentConversation } = await useAsyncData(
     () => apiGetAiConversationDetail(currentConversationId.value as string),
 );
 
+const meta = useLocalStorage<MetaConfiguration>(
+    currentConversationId,
+    { memory: true, rewrite: false },
+    { initOnMounted: true },
+) as RemovableRef<MetaConfiguration>;
+
 const { data: chatConfig } = await useAsyncData("chat-config", () => apiGetChatConfig());
 
 const initialMessages = messagesData.value.items.map((item: AiMessage) => {
@@ -90,6 +99,9 @@ const { messages, input, files, handleSubmit, reload, stop, status, error } = us
         saveConversation: true,
         get conversationId() {
             return currentConversationId.value;
+        },
+        get metadata() {
+            return unref(meta);
         },
     },
     onToolCall() {
@@ -441,6 +453,7 @@ definePageMeta({ activePath: "/" });
                         v-model="input"
                         v-model:file-list="files"
                         :is-loading="isLoading"
+                        :meta-configuration="meta"
                         :needAuth="true"
                         :attachmentSizeLimit="chatConfig?.attachmentSizeLimit"
                         class="sticky bottom-0 z-10 [view-transition-name:chat-prompt]"
