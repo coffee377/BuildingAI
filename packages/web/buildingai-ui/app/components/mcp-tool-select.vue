@@ -18,6 +18,7 @@ interface Props {
     modelId?: string;
     mcpIds?: string[];
     useCache?: boolean;
+    hidden?: boolean;
 }
 
 const { t } = useI18n();
@@ -30,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
     console: false,
     modelId: "",
     useCache: true,
+    hidden: true,
 });
 
 const emit = defineEmits<{
@@ -192,7 +194,12 @@ async function handlePopoverUpdate(value: boolean) {
 </script>
 
 <template>
-    <UPopover v-model:open="isOpen" :disabled="props.disabled" @update:open="handlePopoverUpdate">
+    <UPopover
+        v-if="!hidden"
+        v-model:open="isOpen"
+        :disabled="props.disabled"
+        @update:open="handlePopoverUpdate"
+    >
         <UButton
             :color="selectedIds.length > 0 ? 'primary' : 'neutral'"
             variant="ghost"
