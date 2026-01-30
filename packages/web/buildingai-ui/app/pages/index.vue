@@ -7,6 +7,8 @@ import {
     apiGetQuickMenu,
 } from "@buildingai/service/webapi/ai-conversation";
 
+import type { MetaConfiguration } from "~/components/ask-assistant-chat/chats-prompt/chats-prompt.vue";
+
 // Reactive state management
 const appStore = useAppStore();
 const { t } = useI18n();
@@ -34,6 +36,8 @@ const suggestionsEnabled = computed(
 const suggestions = computed(() => (chatConfig.value as ChatConfig)?.suggestions || []);
 
 const welcomeInfo = computed(() => (chatConfig.value as ChatConfig)?.welcomeInfo || {});
+
+const meta = ref<MetaConfiguration>({ memory: true, rewrite: false });
 
 function handleFileListUpdate(value: FilesList): void {
     files.value = value;
@@ -205,6 +209,7 @@ definePageMeta({
                         v-model="inputValue"
                         :file-list="files"
                         :rows="2"
+                        :meta-configuration="meta"
                         :needAuth="true"
                         :attachmentSizeLimit="chatConfig?.attachmentSizeLimit"
                         @submit="createChat"
