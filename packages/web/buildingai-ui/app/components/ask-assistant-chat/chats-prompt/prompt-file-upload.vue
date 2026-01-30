@@ -166,7 +166,9 @@ const supportedFileTypes = computed(() => {
     const supportedTypes: string[] = [];
 
     // 始终支持文档类型（因为提示内容说"支持各类文档"）
-    supportedTypes.push(...ALL_SUPPORTED_TYPES.document);
+    if (!features.length) {
+        supportedTypes.push(...ALL_SUPPORTED_TYPES.document);
+    }
 
     // 如果模型支持图片，添加图片类型
     if (features.includes("vision")) {
