@@ -82,7 +82,7 @@ const props = withDefaults(
         needAuth: false,
         attachmentSizeLimit: 10,
         metaConfiguration: () => ({ memory: true, rewrite: false }),
-        debug: true,
+        debug: false,
     },
 );
 
@@ -94,6 +94,9 @@ const meta = useVModel(props, "metaConfiguration", emits);
 const { t } = useI18n();
 const userStore = useUserStore();
 const toast = useMessage();
+const controlsStore = useControlsStore();
+
+const showCustomConfig = computed(() => controlsStore.selectedModel?.name == "智能体");
 
 const { focused: isFocused } = useFocus(textareaElement, { initialValue: false });
 
@@ -140,8 +143,8 @@ function handleKeydown(event: KeyboardEvent) {
         if (!canSubmit.value) {
             return;
         }
-
-        emits("submit", inputValue.value, unref(meta));
+        const show = unref(showCustomConfig);
+        emits("submit", inputValue.value, show ? unref(meta) : {});
     }
 }
 
@@ -150,7 +153,8 @@ function handleSubmit() {
         emits("stop");
     } else {
         if (!canSubmit.value) return;
-        emits("submit", inputValue.value, unref(meta));
+        const show = unref(showCustomConfig);
+        emits("submit", inputValue.value, show ? unref(meta) : {});
     }
 }
 
@@ -290,9 +294,12 @@ onMounted(() =>
                         <!--  -->
                     </div>
                 </slot>
-                <KnowledgeSelect v-model="meta.kb" />
-                <UCheckbox label="启用会话记忆" v-model="meta.memory" />
-                <UCheckbox label="启用问题重写" v-model="meta.rewrite" />
+                <!-- 仅智能体的时候显示 -->
+                <template v-if="showCustomConfig">
+                    <KnowledgeSelect v-model="meta.kb" />
+                    <UCheckbox label="启用会话记忆" v-model="meta.memory" />
+                    <UCheckbox label="启用问题重写" v-model="meta.rewrite" />
+                </template>
             </div>
             <!-- Send -->
             <slot name="panel-right">
