@@ -45,6 +45,7 @@
         "@vueuse/core": "catalog:web",
         "echarts": "catalog:web",
         "katex": "^0.16.21",
+        "markstream-vue": "0.0.7-beta.7",
         "reka-ui": "catalog:web",
         "tiptap-markdown": "catalog:web",
         "vue": "catalog:web",

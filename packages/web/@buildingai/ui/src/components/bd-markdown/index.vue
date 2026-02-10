@@ -9,10 +9,11 @@
 <script setup lang="ts">
 import "katex/dist/katex.min.css";
 
+import MarkdownRender, { setCustomComponents } from "markstream-vue";
 import { computed, provide } from "vue";
-import MarkdownRender, { setCustomComponents } from "vue-renderer-markdown";
 
 import CodeBlock from "./components/code-block.vue";
+import HtmlDetails from "./components/HtmlDetails.vue";
 import LinkBlock from "./components/link-block.vue";
 import MermaidBlock from "./components/mermaid-block.vue";
 import type { BdMarkdownProps } from "./types";
@@ -31,6 +32,7 @@ setCustomComponents({
     code_block: CodeBlock,
     mermaid: MermaidBlock,
     link: LinkBlock,
+    details: HtmlDetails,
 });
 </script>
 
@@ -44,7 +46,11 @@ setCustomComponents({
     <ClientOnly>
         <div class="bd-markdown">
             <slot name="before" />
-            <MarkdownRender :content="content" :render-code-blocks-as-pre="true" />
+            <MarkdownRender
+                :content="content"
+                :custom-html-tags="['details']"
+                :render-code-blocks-as-pre="true"
+            />
             <slot name="after" />
         </div>
 
