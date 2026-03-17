@@ -1,9 +1,10 @@
 import type {
     CollectionResponse,
+    PaginatedResultsWrapper,
+    User,
     WrappedBooleanResponse,
     WrappedChunksResponse,
     WrappedCollectionResponse,
-    WrappedCollectionsResponse,
     WrappedDocumentsResponse,
     WrappedEntitiesResponse,
     WrappedRelationshipsResponse,
@@ -60,17 +61,27 @@ function getOffsetAndLimit(rest: Pagination): { offset: number; limit: number } 
     return { offset, limit };
 }
 
+export type CollectionsWithUser = CollectionResponse & { owner?: User };
+export type WrappedCollectionsUserResponse = PaginatedResultsWrapper<CollectionsWithUser[]>;
+
 /**
  * 获取知识库列表
  * @param params 查询参数
  */
-export function apiGetKnowledgeList(
+export async function apiGetKnowledgeList(
     params: QueryKnowledgeParams,
-): Promise<WrappedCollectionsResponse> {
+): Promise<WrappedCollectionsUserResponse> {
     const { showAll = true, ...rest } = params;
     const ownerOnly = !showAll;
     const { offset, limit } = getOffsetAndLimit(rest);
-    return client.collections.list({ offset, limit, ownerOnly });
+    const { totalEntries, results } = await client.collections.list({ offset, limit, ownerOnly });
+    // 列出所有用户
+    const { results: users } = await client.users.list();
+    const resultsWithUser = results.map((c) => ({
+        ...c,
+        owner: users.find((u) => u.id === c.ownerId),
+    }));
+    return { totalEntries, results: resultsWithUser as CollectionsWithUser[] };
 }
 
 export interface CreateKnowledgeParams {
