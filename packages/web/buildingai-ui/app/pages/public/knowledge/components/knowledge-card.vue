@@ -1,10 +1,11 @@
 <script lang="ts" setup>
+import type { CollectionsWithUser } from "@buildingai/service/webapi/knowledge";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import type { CollectionResponse } from "r2r-js";
 import { useRouter } from "vue-router";
 
 interface Props {
-    data: CollectionResponse;
+    data: CollectionsWithUser;
 }
 
 interface Emits {
@@ -74,9 +75,14 @@ const menuItems: DropdownMenuItem[] = [
                 </h3>
 
                 <!-- 统计信息 -->
-                <div class="text-muted-foreground mt-1 text-xs">
-                    {{ data.documentCount }} {{ t("knowledge.card.documents") }} ·
-                    {{ data.userCount }} {{ t("knowledge.card.members") }}
+                <div class="text-muted-foreground mt-1 space-x-2 text-xs">
+                    <span>
+                        {{ data.documentCount }} {{ t("knowledge.card.documents") }} ·
+                        {{ data.userCount }} {{ t("knowledge.card.members") }}
+                    </span>
+                    <span class="rounded bg-blue-300 px-2 py-0.5 text-white">
+                        {{ data.owner?.email || data.owner?.name }}
+                    </span>
                 </div>
             </div>
         </div>

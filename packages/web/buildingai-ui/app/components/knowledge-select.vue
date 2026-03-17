@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { usePaging } from "@buildingai/hooks/use-paging";
-import { apiGetKnowledgeList } from "@buildingai/service/webapi/knowledge";
+import {
+    apiGetKnowledgeList,
+    type CollectionsWithUser,
+} from "@buildingai/service/webapi/knowledge";
 import BdScrollArea from "@buildingai/ui/components/bd-scroll-area/index.vue";
 import type { CollectionResponse } from "r2r-js";
 import { ref } from "vue";
@@ -30,10 +33,10 @@ const { t } = useI18n();
 const loading = ref(false);
 const isOpen = ref(false);
 const search = ref("");
-const selected = ref<CollectionResponse>();
+const selected = ref<CollectionsWithUser>();
 
 // 分页查询文档
-const { paging, getLists } = usePaging<CollectionResponse>({
+const { paging, getLists } = usePaging<CollectionsWithUser>({
     pageSize: 100,
     fetchFun: apiGetKnowledgeList,
     firstLoading: true,
@@ -144,12 +147,16 @@ function select(item?: CollectionResponse) {
                                     <p
                                         class="text-muted-foreground line-clamp-1 flex items-center space-x-2 text-xs"
                                     >
-                                        <span class="rounded bg-blue-300 px-1 text-white">
-                                            Owner: {{ item.ownerId?.toString().slice(0, 8) }}
+                                        <span class="rounded bg-blue-300 px-2 py-0.5 text-white">
+                                            Owner: {{ item?.owner?.email || item?.owner?.name }}
                                         </span>
                                         <span
                                             class="flex-1"
-                                            v-if="item.description && props.showDescription"
+                                            v-if="
+                                                item.description &&
+                                                props.showDescription &&
+                                                item.description != item.name
+                                            "
                                         >
                                             {{ item.description }}
                                         </span>
