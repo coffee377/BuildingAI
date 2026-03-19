@@ -80,8 +80,8 @@ const menuItems: DropdownMenuItem[] = [
                         {{ data.documentCount }} {{ t("knowledge.card.documents") }} ·
                         {{ data.userCount }} {{ t("knowledge.card.members") }}
                     </span>
-                    <span class="rounded bg-blue-300 px-2 py-0.5 text-white">
-                        {{ data.owner?.email || data.owner?.name }}
+                    <span class="rounded bg-blue-300 px-1 py-0.5 text-white">
+                        Owner: {{ data.owner?.email || data.owner?.name }}
                     </span>
                 </div>
             </div>

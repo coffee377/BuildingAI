@@ -144,6 +144,13 @@ function select(item?: CollectionResponse) {
                                     >
                                         {{ item.name }}
                                     </p>
+                                    <p class="text-muted-foreground my-1 space-x-2 text-xs">
+                                        <span>
+                                            {{ item.documentCount }}
+                                            {{ t("knowledge.card.documents") }} ·
+                                            {{ item.userCount }} {{ t("knowledge.card.members") }}
+                                        </span>
+                                    </p>
                                     <p
                                         class="text-muted-foreground line-clamp-1 flex items-center space-x-2 text-xs"
                                     >
