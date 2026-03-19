@@ -25,6 +25,9 @@ export class TitleGenerationCommandHandler {
      * @returns Generated or fallback title
      */
     async generateTitle(model: AiModel, messages: ChatCompletionMessageParam[]): Promise<string> {
+        const time = this.getTime();
+        return `晶灵对话 ${time}`;
+
         const userMessage = messages.find((item) => item.role === "user");
         const rawContent = userMessage?.content;
 
@@ -82,6 +85,19 @@ export class TitleGenerationCommandHandler {
             return this.getFallbackTitle(textContent);
         }
     }
+
+    private getTime = (date = new Date()) => {
+        // 获取月份（0-11），加1后转为两位数
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        // 获取秒数（0-59），转为两位数
+        const days = String(date.getDay()).padStart(2, "0");
+        // 获取小时（0-23），转为两位数
+        const hours = String(date.getHours()).padStart(2, "0");
+        // 获取分钟（0-59），转为两位数
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        // 按照 MM/ss HH:mm 格式拼接
+        return `${month}/${days} ${hours}:${minutes}`;
+    };
 
     /**
      * Generate title from reasoning content (for reasoning models)
